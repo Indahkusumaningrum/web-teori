@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'confirmed',
             'cancelled'])->default('pending');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('userrest')->onDelete('cascade');
             $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
 
         });

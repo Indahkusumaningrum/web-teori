@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Userrest; // Pastikan menggunakan model yang sesuai
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -34,6 +35,39 @@ class AuthController extends Controller
         ]);
 
         return redirect('/login')->with('success', 'Registration successful! You can now log in.');
+    }
+
+    public function showLoginForm()
+{
+    if (auth()->check()) {
+        return redirect('/home'); // Ganti '/home' sesuai dengan route halaman home Anda
+    }
+
+    return view('auth.login');
+}
+
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = Userrest::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password)) {
+            Auth::login($user);
+            return redirect()->intended('/home')->with('success', 'Login berhasil!');
+        }
+
+        return back()->withErrors(['email' => 'Email atau password salah']);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return redirect('/login')->with('success', 'Logout berhasil');
     }
   
   public function showLoginForm()
