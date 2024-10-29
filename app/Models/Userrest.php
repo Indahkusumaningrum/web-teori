@@ -2,23 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class Userrest extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
-    protected $table = 'userrest'; // Pastikan nama tabel benar
+    protected $table = 'userrest'; // Menyebutkan nama tabel secara eksplisit (opsional)
 
     protected $fillable = [
-        'email', 'password', // Tambahkan kolom yang sesuai
+        'name',
+        'email',
+        'password',
+        'role',
     ];
-
+  
     protected $hidden = [
         'password',
+        'remember_token',
     ];
-    
+
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }
-
-
