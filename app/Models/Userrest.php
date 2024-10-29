@@ -17,7 +17,7 @@ class Userrest extends Authenticatable
         'password',
         'role',
     ];
-
+  
     protected $hidden = [
         'password',
         'remember_token',
@@ -28,4 +28,3 @@ class Userrest extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 }
-
