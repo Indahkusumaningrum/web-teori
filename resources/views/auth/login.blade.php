@@ -9,19 +9,23 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        @if ($errors->any())
-            <div class="error-message">
-                <p>{{ $errors->first() }}</p>
+        
+        @if($errors->any())
+            <div class="alert alert-danger">
+                {{ $errors->first('error') }}
             </div>
         @endif
+
         <form action="{{ route('login') }}" method="POST">
             @csrf
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" required>
+            </div>
             <button type="submit">Login</button>
         </form>
     </div>
