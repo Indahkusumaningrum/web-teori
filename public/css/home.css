@@ -69,3 +69,46 @@ button {
 button:hover {
     background-color: #218838;
 }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4CAF50;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+.header .logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile .profile-icon {
+    font-size: 40px;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.user-profile .username {
+    margin-right: 15px;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: #d32f2f;
+}
+

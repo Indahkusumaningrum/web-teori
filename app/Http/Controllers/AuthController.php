@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Userrest; // Pastikan menggunakan model yang sesuai
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -39,32 +40,53 @@ class AuthController extends Controller
     public function showLoginForm()
     {
         if (auth()->check()) {
-            return redirect('/home'); // Ganti '/home' sesuai dengan route halaman home Anda
+            return redirect()->route('home');
+            
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'customer':
+                    return redirect()->route('home');
+                }
+    
         }
 
         return view('auth.login');
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-        $user = Userrest::where('email', $request->email)->first();
+    $credentials = $request->only('email', 'password');
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
-            return redirect()->intended('/home')->with('success', 'Login berhasil!');
-        }
+    $user = Userrest::where('email', $request->email)->first();
 
-        return back()->withErrors(['email' => 'Email atau password salah']);
+    if ($user && Hash::check($request->password, $user->password)) {
+        Auth::guard('web')->login($user);
+        $request->session()->regenerate();
+
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'customer':
+                return redirect()->route('home');
+            }
     }
 
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        return redirect('/login')->with('success', 'Logout berhasil');
-    }
+    return back()->withErrors(['email' => 'Email, password, atau role salah']);
+}
+
+public function logout(Request $request)
+{
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    return redirect('/login')->with('success', 'Logout berhasil');
+}
+
 }
