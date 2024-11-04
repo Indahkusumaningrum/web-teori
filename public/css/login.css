@@ -12,6 +12,7 @@ body {
     height: 100vh;
     background: url('../assets/images/login-bg.jpg') no-repeat center center fixed;
     background-size: cover; /* Gambar akan menyesuaikan dengan ukuran layar */
+    font-family: 'Arial', sans-serif;
 }
 
 .login-container {
@@ -62,5 +63,15 @@ button:hover {
 .error-message {
     margin-bottom: 15px;
     color: #f00;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.register-link {
+    margin-top: 15px;
     font-size: 14px;
 }

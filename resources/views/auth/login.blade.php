@@ -8,26 +8,31 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Login ke Akun Anda</h2>
         
         @if($errors->any())
             <div class="alert alert-danger">
-                {{ $errors->first('error') }}
+                <p>{{ $errors->first('email') }}</p>
             </div>
         @endif
-
         <form action="{{ route('login') }}" method="POST">
             @csrf
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" name="email" id="email" required>
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="Masukkan email Anda" required>
             </div>
             <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Masukkan password Anda" required>
             </div>
-            <button type="submit">Login</button>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="remember"> Ingat Saya
+                </label>
+            </div>
+            <button type="submit">Masuk</button>
         </form>
+        <p class="register-link">Belum punya akun? <a href="{{ route('register') }}">Daftar di sini</a></p>
     </div>
 </body>
 </html>

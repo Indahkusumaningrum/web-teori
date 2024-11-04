@@ -61,6 +61,8 @@
                 </ul>
             </div>
         @endif
+        <p class="register-link">Sudah punya akun? <a href="{{ route('login') }}">Login di sini</a></p>
+
     </div>
 </body>
 </html>
