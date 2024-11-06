@@ -113,3 +113,18 @@ button:hover {
     background-color: #d32f2f;
 }
 
+.status-button {
+    display: inline-block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.status-button:hover {
+    background-color: #2980b9;
+}
