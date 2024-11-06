@@ -20,7 +20,6 @@
                         <th>Waktu</th>
                         <th>Jumlah Tamu</th>
                         <th>Status</th>
-                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,13 +29,6 @@
                             <td>{{ $reservation->reservation_time }}</td>
                             <td>{{ $reservation->guest_count }}</td>
                             <td>{{ ucfirst($reservation->status) }}</td>
-                            <td>
-                                @if($reservation->status === 'pending')
-                                    <a href="{{ route('payment.form', ['reservation_id' => $reservation->id]) }}" class="btn">Bayar Sekarang</a>
-                                @else
-                                    <span>Tidak ada aksi</span>
-                                @endif
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>

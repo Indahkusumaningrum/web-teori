@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Payment;
 
 class ReservationController extends Controller
 {
@@ -15,15 +16,11 @@ class ReservationController extends Controller
 
     public function reserve(Request $request)
     {
-        // Proses reservasi bisa Anda tambahkan di sini
         $request->validate([
             'date' => 'required|date',
             'time' => 'required',
             'guests' => 'required|integer|min:1',
         ]);
-
-        // Simpan reservasi ke database atau proses lainnya
-        // Misalnya, Reservasi::create([...]);
 
         return redirect()->route('home')->with('success', 'Reservasi berhasil dilakukan!');
     }
@@ -60,5 +57,35 @@ class ReservationController extends Controller
 
         return view('status', compact('reservations'));
     }
+
+    public function storePayment(Request $request)
+    {
+        $request->validate([
+            'screenshot' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $reservation = Reservation::where('user_id', Auth::id())->first();
+
+        if (!$reservation) {
+            return redirect()->back()->with('error', 'Tidak ada reservasi yang ditemukan untuk user ini.');
+        }
+
+        // Menyimpan file screenshot
+        if ($request->hasFile('screenshot')) {
+            $fileName = time() . '_' . $request->file('screenshot')->getClientOriginalName();
+            $path = $request->file('screenshot')->storeAs('payments', $fileName, 'public');
+
+            Payment::create([
+                'user_id' => Auth::id(),
+                'screenshot_path' => $path,
+                'reservation_id' => $reservation->id,
+            ]);
+
+            return redirect()->back()->with('success', 'Pembayaran berhasil diunggah!');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
+    }
+
     
 }

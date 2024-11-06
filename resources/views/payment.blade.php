@@ -18,7 +18,6 @@
         @csrf
         <label for="screenshot">Upload Screenshot Pembayaran:</label>
         <input type="file" name="screenshot" id="screenshot" required>
-        <input type="hidden" name="reservation_id" value="{{ $reservation_id }}"> <!-- Ganti dengan ID reservasi yang sesuai -->
         <button type="submit">Unggah</button>
     </form>
 </body>
