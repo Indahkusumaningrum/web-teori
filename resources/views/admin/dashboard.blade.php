@@ -9,20 +9,20 @@
 <body>
     <div class="dashboard-container">
         <aside class="sidebar">
-            <h2>Admin Panel</h2>
-            <ul>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#reservations">Reservations</a></li>
-                <li><a href="#users">Users</a></li>
-                <li><a href="#reports">Reports</a></li>
-                <li><a href="#settings">Settings</a></li>
-                <li>
+            <h2>Admin Dashboard</h2>
+                <ul>
+                    <li><a href="{{ route(name: 'admin.dashboard') }}">Overview</a></li>
+                    <li><a href="{{ route('admin.reservations') }}">Reservations</a></li>
+                    <li><a href="#users">Users</a></li>
+                    <li><a href="#reports">Reports</a></li>
+                    <li><a href="#settings">Settings</a></li>
+                    <li>
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="logout-button">Logout</button>
                     </form>
-                </li>
-            </ul>
+                    </li>
+                </ul>
         </aside>
         <main class="main-content">
             <header class="header">
