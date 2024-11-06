@@ -9,6 +9,8 @@ class Tabel extends Model
 {
     use HasFactory;
 
+    protected $table = 'tables';
+
     protected $fillable = [
         'capacity',
         'table_number',
@@ -16,6 +18,6 @@ class Tabel extends Model
 
     public function reservations()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->hasMany(Reservation::class, 'table_id');
     }
 }

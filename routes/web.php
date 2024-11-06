@@ -26,3 +26,11 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/home', [ReservationController::class, 'index'])->name('home');
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::post('/select-table', [ReservationController::class, 'selectTable'])->name('select.table');
+Route::post('/reserve-table', [ReservationController::class, 'reserveTable'])->name('reserve.table');
+
+Route::get('/payment', [ReservationController::class, 'payment'])->name('payment');
+
+
+// Route untuk memproses pembayaran
+Route::post('/payment/process', [ReservationController::class, 'processPayment'])->name('payment.process');

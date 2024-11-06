@@ -6,6 +6,15 @@
     <title>Home - Reservasi Restoran</title>
     <link rel="stylesheet" href="{{ asset('css/home.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> <!-- Link ke Font Awesome -->
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault();
+            const confirmAction = confirm("Apakah Anda yakin ingin logout?")
+            if (confirmAction) {
+                document.getElementById('logout-form').submit();
+            }
+        }
+    </script>
 </head>
 <body>
     <header class="header">
@@ -15,7 +24,7 @@
             <span class="username">{{ Auth::user()->name }}</span>
             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="logout-button">Logout</button>
+                <button type="submit" class="logout-button" onclick="confirmLogout(event)">Logout</button>
             </form>
         </div>
     </header>
@@ -25,7 +34,7 @@
         @if(session('success'))
             <div class="success-message">{{ session('success') }}</div>
         @endif
-        <form action="{{ route('home') }}" method="POST" class="reservation-form">
+        <form action="{{ route('select.table') }}" method="POST" class="reservation-form">
             @csrf
             <label for="date">Tanggal:</label>
             <input type="date" name="date" required>
