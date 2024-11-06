@@ -25,9 +25,18 @@
         @if(session('success'))
             <div class="success-message">{{ session('success') }}</div>
         @endif
-
+        
         <form action="{{ route('store.reservation') }}" method="POST" class="reservation-form">
             @csrf
+
+            @if(session('success'))
+                <div>{{ session('success') }}</div>
+            @endif
+
+            @if(session('error'))
+                <div>{{ session('error') }}</div>
+            @endif
+            
             <label for="reservation_name">Nama Reservasi:</label>
             <input type="text" name="reservation_name" id="reservation_name" value="{{ Auth::user()->name }}" placeholder="Masukkan nama reservasi" required>
 
@@ -39,6 +48,9 @@
 
             <label for="guests">Jumlah Tamu:</label>
             <input type="number" name="guests" id="guests" min="1" required>
+
+            <label for="screenshot">Upload Bukti Pembayaran:</label>
+            <input type="file" name="screenshot" id="screenshot" required>
 
             <button type="submit">Reservasi Meja</button>
         </form>
