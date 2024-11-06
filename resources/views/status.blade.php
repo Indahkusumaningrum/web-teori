@@ -16,6 +16,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Waktu Reservasi</th>
                         <th>Tanggal</th>
                         <th>Waktu</th>
                         <th>Jumlah Tamu</th>
@@ -25,6 +26,7 @@
                 <tbody>
                     @foreach($reservations as $reservation)
                         <tr>
+                            <td>{{ $reservation->created_at }}</td>
                             <td>{{ $reservation->reservation_date }}</td>
                             <td>{{ $reservation->reservation_time }}</td>
                             <td>{{ $reservation->guest_count }}</td>
