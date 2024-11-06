@@ -11,8 +11,15 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        return view('home');
+        $pendingReservation = Reservation::where('user_id', Auth::id())
+                                       ->where('status', 'pending')
+                                       ->first();
+        $reservations = Reservation::where('user_id', Auth::id())->get();
+
+        return view('home', compact('reservations', 'pendingReservation'));
     }
+
+
 
     public function reserve(Request $request)
     {
@@ -51,12 +58,14 @@ class ReservationController extends Controller
         return redirect()->route('status.show', ['id' => $reservations->id])->with('success', 'Reservasi berhasil dibuat!');
     }
 
-    public function showStatus($id)
+    public function showStatus()
     {
-        $reservations = Reservation::where('user_id', Auth::id())->get();
+        $reservations = Reservation::where('user_id', Auth::id())->get(); // get() mengembalikan koleksi
 
         return view('status', compact('reservations'));
     }
+
+
 
     public function storePayment(Request $request)
     {
@@ -87,5 +96,9 @@ class ReservationController extends Controller
         return redirect()->back()->with('error', 'Gagal mengunggah file. Silakan coba lagi.');
     }
 
+    public function showPaymentForm()
+    {
+        return view('payment');
+    }
     
 }
