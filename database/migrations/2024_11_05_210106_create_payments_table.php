@@ -11,21 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tables', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('capacity');
-            $table->string('table_number')->unique();
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->string('foto')->nullable();
+            $table->unsignedBigInteger('reservation_id');
             $table->timestamps();
+
+            $table->foreign('reservation_id')->references('id')->on('reservations')->onDelete('cascade');
+
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('tables');
+        Schema::dropIfExists('payments');
     }
 };
-

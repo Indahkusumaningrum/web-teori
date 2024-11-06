@@ -21,20 +21,24 @@
     </header>
     <div class="container">
         <h1>Selamat Datang di Sistem Reservasi Restoran</h1>
-        
+
         @if(session('success'))
             <div class="success-message">{{ session('success') }}</div>
         @endif
-        <form action="{{ route('home') }}" method="POST" class="reservation-form">
+
+        <form action="{{ route('store.reservation') }}" method="POST" class="reservation-form">
             @csrf
+            <label for="reservation_name">Nama Reservasi:</label>
+            <input type="text" name="reservation_name" id="reservation_name" value="{{ Auth::user()->name }}" placeholder="Masukkan nama reservasi" required>
+
             <label for="date">Tanggal:</label>
-            <input type="date" name="date" required>
+            <input type="date" name="date" id="date" required>
 
             <label for="time">Waktu:</label>
-            <input type="time" name="time" required>
+            <input type="time" name="time" id="time" required>
 
             <label for="guests">Jumlah Tamu:</label>
-            <input type="number" name="guests" min="1" required>
+            <input type="number" name="guests" id="guests" min="1" required>
 
             <button type="submit">Reservasi Meja</button>
         </form>

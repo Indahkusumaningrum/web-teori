@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\PaymentController;
+
 
 
 
@@ -26,3 +28,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/home', [ReservationController::class, 'index'])->name('home');
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::post('/reservasi', [ReservationController::class, 'storeReservation'])->name('store.reservation');
+Route::get('/status/{id}', [ReservationController::class, 'showStatus'])->name('status.show');
+Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+Route::post('/payment', [PaymentController::class, 'storePayment'])->name('payment.store');
+
