@@ -1,8 +1,10 @@
 <?php
 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+
 
 return new class extends Migration
 {
@@ -19,14 +21,15 @@ return new class extends Migration
             $table->date('reservation_date');
             $table->time('reservation_time');
             $table->integer('guest_count');
-            $table->enum('status', ['pending', 'confirmed',
-            'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
             $table->timestamps();
+       
+       
             $table->foreign('user_id')->references('id')->on('userrest')->onDelete('cascade');
             $table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');
-
         });
     }
+
 
     /**
      * Reverse the migrations.

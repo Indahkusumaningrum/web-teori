@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- Sesuaikan dengan CSS kamu -->
+    <link rel="stylesheet" href="{{ asset('css/register.css') }}">
 </head>
 <body>
     <div class="container">
@@ -61,6 +61,8 @@
                 </ul>
             </div>
         @endif
+        <p class="register-link">Sudah punya akun? <a href="{{ route('login') }}">Login di sini</a></p>
+
     </div>
 </body>
 </html>

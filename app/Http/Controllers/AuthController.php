@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Userrest; // Pastikan menggunakan model yang sesuai
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -34,4 +36,57 @@ class AuthController extends Controller
 
         return redirect('/login')->with('success', 'Registration successful! You can now log in.');
     }
+
+    public function showLoginForm()
+    {
+        if (auth()->check()) {
+            return redirect()->route('home');
+            
+            switch ($user->role) {
+                case 'admin':
+                    return redirect()->route('admin.dashboard');
+                case 'customer':
+                    return redirect()->route('home');
+                }
+    
+        }
+
+        return view('auth.login');
+    }
+
+    public function login(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    $credentials = $request->only('email', 'password');
+
+    $user = Userrest::where('email', $request->email)->first();
+
+    if ($user && Hash::check($request->password, $user->password)) {
+        Auth::guard('web')->login($user);
+        $request->session()->regenerate();
+
+        switch ($user->role) {
+            case 'admin':
+                return redirect()->route('admin.dashboard');
+            case 'customer':
+                return redirect()->route('home');
+            }
+    }
+
+    return back()->withErrors(['email' => 'Email, password, atau role salah']);
+}
+
+public function logout(Request $request)
+{
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    
+    return redirect('/login')->with('success', 'Logout berhasil');
+}
+
 }
