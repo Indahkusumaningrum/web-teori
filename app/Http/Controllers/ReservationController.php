@@ -6,18 +6,27 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
+use App\Models\Table;
 
 class ReservationController extends Controller
 {
     public function index()
-    {
-        $pendingReservation = Reservation::where('user_id', Auth::id())
+{
+    // Ambil data reservation yang berstatus 'pending' untuk user yang sedang login
+    $pendingReservation = Reservation::where('user_id', Auth::id())
                                        ->where('status', 'pending')
                                        ->first();
-        $reservations = Reservation::where('user_id', Auth::id())->get();
+    
+    // Ambil semua data reservation untuk user yang sedang login
+    $reservations = Reservation::where('user_id', Auth::id())->get();
+    
+    // Ambil semua data meja dari tabel 'tables'
+    $tables = Table::all();
+    
+    // Kirim data ke view
+    return view('home', compact('reservations', 'pendingReservation', 'tables'));
+}
 
-        return view('home', compact('reservations', 'pendingReservation'));
-    }
 
 
 
@@ -47,7 +56,7 @@ class ReservationController extends Controller
 
         $reservations = new Reservation();
         $reservations->user_id = Auth::id(); // ID user yang login
-        $reservations->table_id; // Ganti dengan ID meja yang sesuai, bisa diambil dari input user atau logika otomatis
+        $reservations->table_id = $request->table_number; // Ganti dengan ID meja yang sesuai, bisa diambil dari input user atau logika otomatis
         $reservations->reservation_name = $reservationName; // Menggunakan inputan dari user atau default
         $reservations->reservation_date = $request->date;
         $reservations->reservation_time = $request->time;
@@ -100,5 +109,22 @@ class ReservationController extends Controller
     {
         return view('payment');
     }
+
+    public function store(Request $request)
+{
+    // Validasi input
+    $validated = $request->validate([
+        'table_id' => 'required|exists:tables,table_id',
+        // Tambahkan validasi lain sesuai kebutuhan
+    ]);
+
+    // Simpan data reservasi
+    Reservation::create([
+        'table_id' => $validated['table_id'],
+        // Tambahkan kolom lain yang diperlukan
+    ]);
+
+    return redirect()->route('reservations.create')->with('success', 'Reservasi berhasil dibuat!');
+}
     
 }
