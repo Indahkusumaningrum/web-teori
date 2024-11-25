@@ -21,6 +21,7 @@
                         <th>Waktu</th>
                         <th>Jumlah Tamu</th>
                         <th>Status</th>
+                        <th>Nomor Meja</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,6 +32,7 @@
                             <td>{{ $reservation->reservation_time }}</td>
                             <td>{{ $reservation->guest_count }}</td>
                             <td>{{ ucfirst($reservation->status) }}</td>
+                            <td>{{ $reservation->table_id }}</td>
                         </tr>
                     @endforeach
                 </tbody>

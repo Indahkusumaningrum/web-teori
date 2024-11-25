@@ -38,3 +38,7 @@ Route::middleware('auth', 'isAdmin')->group(function () {
     Route::post('/admin/reservations/update/{id}', [AdminReservationController::class, 'update'])->name('admin.reservations.update');
 });
 
+// Rute tambahan untuk halaman reservasi
+Route::get('reservations/create', [ReservationController::class, 'create'])->name('reservations.create');
+Route::post('reservations/store', [ReservationController::class, 'store'])->name('reservations.store');
+

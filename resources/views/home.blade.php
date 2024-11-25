@@ -55,6 +55,19 @@
                 <label for="guests">Jumlah Tamu:</label>
                 <input type="number" name="guests" id="guests" min="1" required>
 
+                <!-- Nomor Meja -->
+                <div>
+                    <label for="table_number">Nomor Meja:</label>
+                    <select name="table_number" id="table_number" required>
+                        <option value="">-- Pilih Meja --</option>
+                        @foreach ($tables as $table)
+                            <option value="{{ $table->table_number }}">
+                                Meja {{ $table->table_number }} (Kapasitas: {{ $table->capacity }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <label for="screenshot">Upload Bukti Pembayaran:</label>
                 <input type="file" name="screenshot" id="screenshot" required>
 
