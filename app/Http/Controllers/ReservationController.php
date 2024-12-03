@@ -11,22 +11,36 @@ use App\Models\Table;
 class ReservationController extends Controller
 {
     public function index()
-{
-    // Ambil data reservation yang berstatus 'pending' untuk user yang sedang login
-    $pendingReservation = Reservation::where('user_id', Auth::id())
-                                       ->where('status', 'pending')
-                                       ->first();
-    
-    // Ambil semua data reservation untuk user yang sedang login
-    $reservations = Reservation::where('user_id', Auth::id())->get();
-    
-    // Ambil semua data meja dari tabel 'tables'
-    $tables = Table::all();
-    
-    // Kirim data ke view
-    return view('home', compact('reservations', 'pendingReservation', 'tables'));
-}
+    {
+        // Ambil meja yang telah dipesan untuk tanggal tertentu
+        $reservedTableNumbers = Reservation::whereIn('status', ['pending', 'confirmed'])
+        ->pluck('table_id')
+        ->toArray();
 
+        // Ambil semua data meja
+        $tables = Table::all();
+
+        // Ambil reservasi berdasarkan user login
+        $pendingReservation = Reservation::where('user_id', Auth::id())
+            ->where('status', 'pending')
+            ->first();
+
+        $reservations = Reservation::where('user_id', Auth::id())->get();
+
+        // Ambil data reservation yang berstatus 'pending' untuk user yang sedang login
+        $pendingReservation = Reservation::where('user_id', Auth::id())
+                                        ->where('status', 'pending')
+                                        ->first();
+        
+        // Ambil semua data reservation untuk user yang sedang login
+        $reservations = Reservation::where('user_id', Auth::id())->get();
+        
+        // Ambil semua data meja dari tabel 'tables'
+        $tables = Table::all();
+        
+        // Kirim data ke view
+        return view('home', compact('reservations', 'pendingReservation', 'tables', 'reservedTableNumbers'));
+    }
 
 
 
@@ -41,31 +55,59 @@ class ReservationController extends Controller
         return redirect()->route('home')->with('success', 'Reservasi berhasil dilakukan!');
     }
 
+    public function create()
+    {
+        // Ambil meja yang sedang digunakan oleh reservasi aktif
+        $reservedTableNumbers = Reservation::where('status', '!=', 'done')
+            ->pluck('table_number')
+            ->toArray();
+
+        // Ambil semua meja
+        $tables = Table::all();
+
+        return view('reservation.create', compact('tables', 'reservedTableNumbers'));
+    }
+
     public function storeReservation(Request $request)
     {
         $request->validate([
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today', // Tanggal harus hari ini atau setelahnya
             'time' => 'required',
             'guests' => 'required|integer|min:1',
-            'reservation_name' => 'nullable|string|max:255', // `nullable` agar input tidak wajib
-
+            'table_number' => 'required|exists:tables,table_number',
+            'screenshot' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $user = Auth::user(); // Mengambil data user yang sedang login
-        $reservationName = $request->input('reservation_name', 'customer'); // Default ke 'customer' jika tidak diisi
+        $table = Table::where('table_number', $request->table_number)->first();
 
+        // Cek apakah meja tersedia
+        $tableReserved = Reservation::where('table_id', $table->id)
+            ->where('reservation_date', $request->date)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->exists();
+
+        if ($tableReserved) {
+            return back()->withErrors(['table_number' => 'Meja ini sudah dipesan untuk tanggal tersebut.']);
+        }
+
+        $user = Auth::user(); // User yang login
+        $reservationName = $request->input('reservation_name', 'liam'); // Default ke 'customer' jika tidak diisi
+
+        // Simpan data reservasi
         $reservations = new Reservation();
-        $reservations->user_id = Auth::id(); // ID user yang login
-        $reservations->table_id = $request->table_number; // Ganti dengan ID meja yang sesuai, bisa diambil dari input user atau logika otomatis
+        $reservations->user_id = Auth::id();
+        $reservations->table_id = $table->id;
         $reservations->reservation_name = $reservationName; // Menggunakan inputan dari user atau default
         $reservations->reservation_date = $request->date;
         $reservations->reservation_time = $request->time;
         $reservations->guest_count = $request->guests;
         $reservations->status = 'pending';
+
         $reservations->save();
 
         return redirect()->route('status.show', ['id' => $reservations->id])->with('success', 'Reservasi berhasil dibuat!');
     }
+
 
     public function showStatus()
     {
@@ -73,6 +115,16 @@ class ReservationController extends Controller
 
         return view('status', compact('reservations'));
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->status = $request->input('status');
+        $reservation->save();
+
+        return redirect()->route('admin.reservations')->with('success', 'Status reservasi berhasil diperbarui!');
+    }
+
 
 
 

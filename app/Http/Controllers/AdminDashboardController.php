@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Reservation;
+use App\Models\Table;
+use App\Models\Userrest;
 
 class AdminDashboardController extends Controller
 {
@@ -21,6 +24,24 @@ class AdminDashboardController extends Controller
     // Menampilkan halaman dashboard
     public function index()
     {
-        return view('admin.dashboard'); // Pastikan file dashboard.blade.php ada di resources/views/admin
+        $totalReservations = Reservation::count();
+        $pendingReservations = Reservation::where('status', 'pending')->count();
+        $confirmedReservations = Reservation::where('status', 'confirmed')->count();
+        $doneReservations = Reservation::where('status', 'done')->count();
+        $totalTables = Table::count();
+        $totalCustomers = Userrest::where('role', 'customer')->count();
+        $totalAdmins = Userrest::where('role', 'admin')->count();
+        
+
+        return view('admin.dashboard', compact(
+            'totalReservations',
+            'pendingReservations',
+            'confirmedReservations',
+            'doneReservations',
+            'totalTables',
+            'totalCustomers',
+            'totalAdmins'
+        ));
+        
     }
 }
