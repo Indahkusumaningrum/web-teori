@@ -61,12 +61,19 @@
                     <select name="table_number" id="table_number" required>
                         <option value="">-- Pilih Meja --</option>
                         @foreach ($tables as $table)
-                            <option value="{{ $table->table_number }}">
-                                Meja {{ $table->table_number }} (Kapasitas: {{ $table->capacity }})
-                            </option>
+                            @if (in_array($table->id, $reservedTableNumbers))
+                                <option value="{{ $table->id }}" disabled>
+                                    Meja {{ $table->table_number }} (Sudah Dipesan)
+                                </option>
+                            @else
+                                <option value="{{ $table->id }}">
+                                    Meja {{ $table->table_number }} (Kapasitas: {{ $table->capacity }})
+                                </option>
+                            @endif
                         @endforeach
                     </select>
                 </div>
+
 
                 <label for="screenshot">Upload Bukti Pembayaran:</label>
                 <input type="file" name="screenshot" id="screenshot" required>
@@ -75,5 +82,14 @@
             </form>
         @endif
     </div>
+    <script>
+        document.querySelectorAll('option[disabled]').forEach(option => {
+            option.addEventListener('click', function (event) {
+                event.preventDefault();
+                alert('Meja sudah direservasi');
+            });
+        });
+    </script>
+
 </body>
 </html>

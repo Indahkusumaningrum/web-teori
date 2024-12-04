@@ -22,6 +22,9 @@ class Userrest extends Authenticatable
     protected $hidden = [
         'password',
     ];
+    
+    protected $primaryKey = 'id';
+
 
     protected $casts = [
         'email_verified_at' => 'datetime',
